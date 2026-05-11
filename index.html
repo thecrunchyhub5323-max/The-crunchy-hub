@@ -3,6 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE CRUNCHY HUB | Rajkot Master Menu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif; background-color: #080808; color: #ffffff; scroll-behavior: smooth; }
+        .accent-gold { color: #d4af37; }
+        .btn-main { background-color: #d13d2a; color: #fff; font-weight: 900; transition: 0.3s; text-transform: uppercase; border-radius: 12px; }
+        .btn-main:hover { background-color: #b52b1b; transform: scale(1.02); }
+        .btn-outline { border: 2px solid #d4af37; color: #d4af37; font-weight: 700; transition: 0.3s; text-transform: uppercase; border-radius: 12px; }
+        .btn-outline:hover { background: #d4af37; color: #000; }
+        
+        .hero-section {
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(8,8,8,1)), 
+                        url('https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=1500');
+            background-size: cover; background-position: center;
+            padding: 140px 20px 80px 20px; text-align: center;
+        }
+
+        .category-btn {
+            background: #121212; border: 1px solid #1e1e1e; padding: 18px; border-radius: 15px;
+            cursor: pointer; transition: 0.3s; text-align: left; width: 100%; margin-bottom: 10px;
+            display: flex; align-items: center; gap: 15px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .category-btn.active { border-color: #d4af37; background: #1a1a1a; color: #d4af37; box-shadow: 0 0 20px rgba(212, 175, 55, 0.15); }
+        
+        .menu-grid { display: none; }
+        .menu-grid.active { display: grid; animation: fadeIn 0.6s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        .food-card { background: #121212; border: 1px solid #1e1e1e; border-radius: 20px; overflow: hidden; transition: 0.4s; }
+        .food-card:hover { border-color: #d4af37; transform: translateY(-5px); }
+        .food-img { width: 100%; height: 180px; object-fit: cover; }
+    </style>
+</head>
+<body>
+
+    <nav class="fixed top-0 w-full z-50 bg-black/90 backdrop-blur-xl py-5 px-6 md:px-12 flex justify-between items-center border-b border-white/5">
+        <div class="flex items-center gap-4">
+            <img src="1000031857.webp" alt="TCH Logo" class="h-12 w-12 rounded-full border border-white/10 bg-black">
+            <span class="font-black italic text-2xl uppercase tracking-tighter">THE CRUNCHY HUB</span>
+        </div>
+        <a href="https://wa.me/919054545323" class="btn-main px-8 py-3 text-[11px] tracking-widest">Order Now</a>
+    </nav>
+
+    <header class="hero-section">
+        <img src="1000031857.webp" alt="Logo" class="h-40 w-40 mx-auto mb-8 rounded-full shadow-2xl bg-black border-4 border-gold/20">
+        <h1 class="text-6xl md:text-8xl font-black italic uppercase leading-tight mb-4">MASTER<br><span class="accent-gold">MENU</span></h1>
+        <p class="text-gray-400 text-sm tracking-[0.4em] uppercase">Rajkot • Open 5PM - 2AM</p>
+    </header>
+
+    <section id="menu" class="max-w-7xl mx-auto px-6 py-24">
+        <div class="flex flex-col lg:flex-row gap-12">
+            
+            <div class="lg:w-1/4">
+                <h2 class="text-[10px] font-black uppercase tracking-[0.4em] text-gray-500 mb-8 ml-2">Browse Categories</h2>
+                <button class="category-btn active" onclick="showCategory('burgers', this)"><span>🍔</span> <span>Burgers</span></button>
+                <button class="category-btn" onclick="showCategory('pizzas', this)"><span>🍕</span> <span>Fresh Pizzas</span></button>
+                <button class="category-btn" onclick="showCategory('chicken', this)"><span>🍗</span> <span>Fried Chicken</span></button>
+                <button class="category-btn" onclick="showCategory('snacks', this)"><span>🌯</span> <span>Wraps & Momos</span></button>
+                <button class="category-btn" onclick="showCategory('combos', this)"><span>🚀</span> <span>Value Combos</span></button>
+            </div>
+
+            <div class="lg:w-3/4">
+                
+                <div id="burgers" class="menu-grid active grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="food-card"><img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400" class="food-img"><div class="p-6 flex justify-between items-center"><div><p class="font-black uppercase text-sm">Joy Chicken Burger</p><p class="accent-gold font-black">₹79</p></div><button class="btn-main px-4 py-2 text-[10px]">Add</button></div></div>
+                    <div class="food-card"><img src="https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=400" class="food-img"><div class="p-6 flex justify-between items-center"><div><p class="font-black uppercase text-sm">TCH Zinger Burger</p><p class="accent-gold font-black">₹109</p></div><button class="btn-main px-4 py-2 text-[10px]">Add</button></div></div>
+                    <div class="food-card"><img src="https://images.unsplash.com/photo-1610440042657-612c34d95e9f?w=400" class="food-img"><div class="p-6 flex justify-between items-center"><div><p class="font-black uppercase text-sm">Classic Veg Burger</p><p class="accent-gold font-black">₹49</p></div><button class="btn-main px-4 py-2 text-[10px]">Add</button></div></div>
+                    <div class="food-card"><img src="https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=400" class="food-img"><div class="p-6 flex justify-between items-center"><div><p class="font-black uppercase text-sm">Tandoori Zinger</p><p class="accent-gold font-black">₹119</p></div><button class="btn-main px-4 py-2 text-[10px]">Add</button></div></div>
+                </div>
+
+                <div id="pizzas" class="menu-grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="food-card"><img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400" class="food-img"><div class="p-6 flex justify-between items-center"><div><p class="font-black uppercase text-sm">Indi Chicken Tikka</p><p class="accent-gold font-black">₹219</p></div><button class="btn-main px-4 py-2 text-[10px]">Add</button></div></div>
+                    <div class="food-card"><img src="https://images.unsplash.com/photo-1628840042765-356cda07504e?w=400" class="food-img"><div class="p-6 flex justify-between items-center"><div><p class="font-black uppercase text-sm">Margherita Pizza</p><p class="accent-gold font-black">₹149</p></div><button class="btn-main px-4 py-2 text-[10px]">Add</button></div></div>
+                    <div class="food-card"><img src="https://images.unsplash.com/photo-1574071318508-1cdbad80ad38?w=400" class="food-img"><div class="p-6 flex justify-between items-center"><div><p class="font-black uppercase text-sm">Paneer Tikka Pizza</p><p class="accent-gold font-black">₹199</p></div><button class="btn-main px-4 py-2 text-[10px]">Add</button></div></div>
+                </div>
+
+                <div id="chicken" class="menu-grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="food-card"><img src="https://images.unsplash.com/photo-1562967914-608f82629710?w=400" class="food-img"><div class="p-6 flex justify-between items-center"><div><p class="font-black uppercase text-sm">Chicken Popcorn</p><p class="accent-gold font-black">₹149</p></div><button class="btn-main px-4 py-2 text-[10px]">Add</button></div></div>
+                    <div class="food-card"><img src="https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=400" class="food-img"><div class="p-6 flex justify-between items-center"><div><p class="font-black uppercase text-sm">Chicken Strips (3P)</p><p class="accent-gold font-black">₹199</p></div><button class="btn-main px-4 py-2 text-[10px]">Add</button></div></div>
+                </div>
+
+                <div id="snacks" class="menu-grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="food-card"><img src="https://images.unsplash.com/photo-1626700051175-656fc7c32af1?w=400" class="food-img"><div class="p-6 flex justify-between items-center"><div><p class="font-black uppercase text-sm">Chicken Tikka Wrap</p><p class="accent-gold font-black">₹99</p></div><button class="btn-main px-4 py-2 text-[10px]">Add</button></div></div>
+                    <div class="food-card"><img src="https://images.unsplash.com/photo-1625220194771-7ebdea0b70b4?w=400" class="food-img"><div class="p-6 flex justify-between items-center"><div><p class="font-black uppercase text-sm">Veg Kurkure Momos</p><p class="accent-gold font-black">₹119</p></div><button class="btn-main px-4 py-2 text-[10px]">Add</button></div></div>
+                </div>
+
+                <div id="combos" class="menu-grid grid-cols-1 gap-6">
+                    <div class="bg-[#121212] border-2 border-red-500/20 p-8 rounded-3xl flex flex-col md:flex-row justify-between items-center text-center md:text-left">
+                        <div><p class="text-red-500 font-black italic text-3xl mb-1">COMBO 1</p><p class="text-gray-400 text-sm">Classic Veg Burger + Small Fries + Cold Drink</p></div>
+                        <p class="text-3xl font-black accent-gold mt-4 md:mt-0">₹109/-</p>
+                    </div>
+                    <div class="bg-[#121212] border-2 border-red-500/20 p-8 rounded-3xl flex flex-col md:flex-row justify-between items-center text-center md:text-left">
+                        <div><p class="text-red-500 font-black italic text-3xl mb-1">FAMILY COMBO</p><p class="text-gray-400 text-sm">Popcorn(15) + Wings(6) + Strips(5) + Fries + Dips + Drinks</p></div>
+                        <p class="text-3xl font-black accent-gold mt-4 md:mt-0">₹649/-</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <footer id="find-us" class="bg-black py-24 px-6 border-t border-white/5 text-center">
+        <h3 class="text-4xl font-black italic accent-gold uppercase mb-8">Locate The Hub</h3>
+        <p class="text-white font-bold text-xl mb-12">Shop no. 38, Ground floor, Sadguru Tirthdham, Raiya Road, Rajkot</p>
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-5 max-w-lg mx-auto">
+            <a href="https://wa.me/919054545323" class="btn-main px-12 py-5 w-full">Order Now</a>
+            <a href="https://www.google.com/maps/search/?api=1&query=THE+CRUNCHY+HUB+-+RAJKOT&query_place_id=ChIJ2TAXCr3LWTkRZ4IRqsPqdEw" target="_blank" class="btn-outline px-12 py-5 w-full">Get Directions</a>
+        </div>
+    </footer>
+
+    <script>
+        function showCategory(id, btn) {
+            document.querySelectorAll('.menu-grid').forEach(g => g.classList.remove('active'));
+            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            btn.classList.add('active');
+        }
+    </script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>THE CRUNCHY HUB | Rajkot Official</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&display=swap" rel="stylesheet">
