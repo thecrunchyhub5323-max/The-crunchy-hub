@@ -9,7 +9,6 @@
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #080808; color: white; scroll-behavior: smooth; }
         
-        /* High-End Laptop Background Effect */
         .hero-bg {
             background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), 
                         url('https://images.unsplash.com/photo-1514326640560-7d063ef2aed5?q=80&w=2000&auto=format&fit=crop');
@@ -33,515 +32,227 @@
             box-shadow: 0 10px 30px rgba(212, 175, 55, 0.1);
         }
 
-        .category-btn { transition: all 0.3s ease; }
-        .category-btn.active { background: #d4af37; color: black; transform: scale(1.1); }
+        .category-btn { transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.1); }
+        .category-btn.active { background: #d4af37; color: black; border-color: #d4af37; font-weight: 900; }
         
         .menu-grid { display: none; }
         .menu-grid.active { display: grid; }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
 
-        /* Floating Logo Animation */
-        .logo-container img {
-            transition: transform 0.3s ease;
+        #cart-ui {
+            display: none;
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #d4af37;
+            color: black;
+            padding: 18px 28px;
+            border-radius: 50px;
+            box-shadow: 0 15px 35px rgba(212, 175, 55, 0.4);
+            z-index: 999;
+            font-weight: 900;
+            border: 2px solid black;
+            cursor: pointer;
         }
-        .logo-container:hover img {
-            transform: rotate(-5deg) scale(1.1);
+        #cart-count { background: black; color: white; padding: 2px 10px; border-radius: 50px; font-size: 12px; margin-left: 8px; }
+
+        #cart-drawer {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            max-width: 400px;
+            height: 100%;
+            background: #111;
+            z-index: 1001;
+            transition: right 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+            box-shadow: -10px 0 30px rgba(0,0,0,0.8);
+            border-left: 1px solid rgba(212, 175, 55, 0.2);
+            display: flex;
+            flex-direction: column;
+        }
+        #cart-drawer.open { right: 0; }
+        
+        #cart-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(4px);
+            display: none;
+            z-index: 1000;
         }
     </style>
 </head>
 <body>
 
-    <header class="py-4 px-8 flex justify-between items-center border-b border-white/10 bg-black/90 sticky top-0 z-50 backdrop-blur-xl">
-        <a href="#" class="logo-container flex items-center gap-3">
-            <img src="logo.png" alt="The Crunchy Hub Logo" class="h-16 md:h-20 w-auto">
+    <header class="py-4 px-4 md:px-8 flex justify-between items-center border-b border-white/10 bg-black/90 sticky top-0 z-50 backdrop-blur-xl">
+        <a href="#" class="flex items-center gap-3">
+            <img src="logo.png" alt="TCH Logo" class="h-10 md:h-16 w-auto">
             <div class="hidden sm:block">
-                <h1 class="text-xl font-black italic tracking-tighter">THE <span class="accent-gold">CRUNCHY</span> HUB</h1>
-                <p class="text-[8px] tracking-[0.4em] uppercase opacity-50 leading-none">Crunch in every bite</p>
+                <h1 class="text-lg md:text-xl font-black italic tracking-tighter uppercase">THE <span class="accent-gold">CRUNCHY</span> HUB</h1>
             </div>
         </a>
-        <div class="hidden md:flex gap-8 font-bold text-sm">
-            <a href="#menu" class="hover:text-[#d4af37] transition">MENU</a>
-            <a href="#find-us" class="hover:text-[#d4af37] transition">LOCATION</a>
-            <a href="https://wa.me/919054545323" class="accent-gold border border-[#d4af37] px-4 py-2 rounded-lg hover:bg-[#d4af37] hover:text-black transition">ORDER NOW</a>
+
+        <div class="flex items-center gap-2 md:gap-4">
+            <!-- FIXED CALL BUTTON -->
+            <button onclick="window.location.href='tel:+919054545323'" class="flex items-center gap-2 bg-white/5 border border-white/10 px-3 py-2 rounded-lg hover:bg-gold hover:text-black transition">
+                <span class="text-[10px] md:text-xs font-black uppercase">Call to Order</span>
+            </button>
+            <a href="https://www.google.com/maps/dir/?api=1&destination=THE+CRUNCHY+HUB+-+RAJKOT&destination_place_id=ChIJ2TAXCr3LWTkRZ4IRqsPqdEw" target="_blank" class="flex items-center gap-2 bg-gold text-black px-3 py-2 rounded-lg hover:scale-105 transition">
+                <span class="text-[10px] md:text-xs font-black uppercase">Directions</span>
+            </a>
         </div>
     </header>
 
-    <section class="hero-bg min-h-[75vh] flex flex-col justify-center items-center text-center px-6">
-        <h2 class="text-5xl md:text-8xl font-black uppercase italic mb-6 leading-tight">
-            Level Up Your <br><span class="accent-gold">Taste Buds</span>
-        </h2>
-        <p class="text-gray-400 text-lg md:text-xl max-w-2xl mb-10">
-            Freshly prepared burgers, signature pizzas, and the crunchiest fried chicken in Rajkot. 
-        </p>
-        <div class="flex flex-col sm:flex-row gap-5 w-full sm:w-auto">
-            <a href="#menu" class="bg-gold text-black font-black px-10 py-5 rounded-xl uppercase text-sm text-center shadow-lg shadow-gold/20">Explore Menu</a>
-            <a href="https://wa.me/919054545323" class="bg-white text-black font-black px-10 py-5 rounded-xl uppercase text-sm text-center">WhatsApp Order</a>
+    <div id="cart-overlay" onclick="toggleCart()"></div>
+    <div id="cart-drawer">
+        <div class="p-6 border-b border-white/10 flex justify-between items-center">
+            <h2 class="text-2xl font-black italic accent-gold uppercase">Your Order</h2>
+            <button onclick="toggleCart()" class="text-white text-3xl">×</button>
+        </div>
+        <div id="cart-items-list" class="flex-grow overflow-y-auto p-6 space-y-4 no-scrollbar"></div>
+        <div class="p-6 border-t border-white/10 bg-black">
+            <div class="flex justify-between text-xl font-black mb-6">
+                <span>TOTAL</span>
+                <span class="accent-gold" id="cart-total">₹0</span>
+            </div>
+            <button onclick="sendOrder()" class="w-full bg-gold text-black py-4 rounded-xl font-black uppercase text-sm mb-3">Send to WhatsApp</button>
+            <button onclick="clearCart()" class="w-full text-gray-500 text-xs uppercase font-bold tracking-widest">Clear All</button>
+        </div>
+    </div>
+
+    <section class="hero-bg min-h-[40vh] flex flex-col justify-center items-center text-center px-6">
+        <h2 class="text-4xl md:text-7xl font-black uppercase italic leading-tight">Level Up Your <br><span class="accent-gold">Taste Buds</span></h2>
+    </section>
+
+    <section id="menu-tabs" class="py-6 px-4 sticky top-[73px] md:top-[97px] bg-[#080808] z-40 border-b border-white/5">
+        <div class="max-w-6xl mx-auto flex overflow-x-auto gap-3 pb-2 no-scrollbar md:justify-center">
+            <button onclick="showCategory('burgers', this)" class="category-btn active px-6 py-3 rounded-xl whitespace-nowrap font-black text-[10px] uppercase">Burgers</button>
+            <button onclick="showCategory('sandwiches', this)" class="category-btn px-6 py-3 rounded-xl whitespace-nowrap font-black text-[10px] uppercase">Sandwiches</button>
+            <button onclick="showCategory('pizzas', this)" class="category-btn px-6 py-3 rounded-xl whitespace-nowrap font-black text-[10px] uppercase">Pizzas</button>
+            <button onclick="showCategory('chicken', this)" class="category-btn px-6 py-3 rounded-xl whitespace-nowrap font-black text-[10px] uppercase">Fried Chicken</button>
+            <button onclick="showCategory('sides', this)" class="category-btn px-6 py-3 rounded-xl whitespace-nowrap font-black text-[10px] uppercase">Sides & Drinks</button>
         </div>
     </section>
 
-    <section id="menu" class="py-8 px-4 sticky top-[97px] md:top-[113px] bg-[#080808]/95 z-40 border-b border-white/5">
-        <div class="max-w-6xl mx-auto flex overflow-x-auto gap-4 pb-2 no-scrollbar md:justify-center">
-            <button onclick="showCategory('burgers', this)" class="category-btn active border border-white/20 px-8 py-3 rounded-xl whitespace-nowrap font-black text-xs uppercase">Burgers</button>
-            <button onclick="showCategory('pizzas', this)" class="category-btn border border-white/20 px-8 py-3 rounded-xl whitespace-nowrap font-black text-xs uppercase">Pizzas</button>
-            <button onclick="showCategory('chicken', this)" class="category-btn border border-white/20 px-8 py-3 rounded-xl whitespace-nowrap font-black text-xs uppercase">Fried Chicken</button>
-            <button onclick="showCategory('sides', this)" class="category-btn border border-white/20 px-8 py-3 rounded-xl whitespace-nowrap font-black text-xs uppercase">Sides & Drinks</button>
-        </div>
-    </section>
-
-    <main class="max-w-7xl mx-auto px-6 py-16">
-                <div id="burgers" class="menu-grid active grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            
-            <div class="food-card rounded-[2rem] overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600" class="w-full h-56 object-cover" alt="Joy Chicken">
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-black text-lg uppercase">Joy Chicken</h3>
-                        <span class="accent-gold font-black italic">₹79</span>
-                    </div>
-                    <p class="text-gray-500 text-xs mb-6 leading-relaxed">Crispy chicken patty with TCH secret mayo.</p>
-                    <button class="w-full bg-white text-black py-3 rounded-xl font-black text-xs uppercase hover:bg-[#d4af37] transition">Add to Order</button>
-                </div>
-            </div>
-
-            <div class="food-card rounded-[2rem] overflow-hidden border-green-500/30">
-                <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?w=600" class="w-full h-56 object-cover" alt="Veg Burger">
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-black text-lg uppercase">Classic Veg.</h3>
-                        <span class="accent-gold font-black italic">₹49</span>
-                    </div>
-                    <p class="text-gray-500 text-xs mb-6 leading-relaxed">Fresh veg patty with TCH signature dressing.</p>
-                    <button class="w-full bg-white text-black py-3 rounded-xl font-black text-xs uppercase hover:bg-[#d4af37] transition">Add to Order</button>
-                </div>
-            </div>
-
-            <div class="food-card rounded-[2rem] overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=600" class="w-full h-56 object-cover" alt="Zinger">
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-black text-lg uppercase">TCH Zinger</h3>
-                        <span class="accent-gold font-black italic">₹109</span>
-                    </div>
-                    <p class="text-gray-500 text-xs mb-6 leading-relaxed">Extra crunchy, extra spicy chicken fillet.</p>
-                    <button class="w-full bg-white text-black py-3 rounded-xl font-black text-xs uppercase hover:bg-[#d4af37] transition">Add to Order</button>
-                </div>
-            </div>
-
-            <div class="food-card rounded-[2rem] overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1586816001966-79b736744398?w=600" class="w-full h-56 object-cover" alt="Double Patty">
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-black text-lg uppercase">Double Chicken</h3>
-                        <span class="accent-gold font-black italic">₹109</span>
-                    </div>
-                    <p class="text-gray-500 text-xs mb-6 leading-relaxed">Two crispy patties for the ultimate hunger.</p>
-                    <button class="w-full bg-white text-black py-3 rounded-xl font-black text-xs uppercase hover:bg-[#d4af37] transition">Add to Order</button>
-                </div>
-            </div>
-
-            <div class="food-card rounded-[2rem] overflow-hidden border-green-500/30">
-                <img src="https://images.unsplash.com/photo-1603064752734-4c48922597e1?w=600" class="w-full h-56 object-cover" alt="Paneer Burger">
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-black text-lg uppercase">Peri Peri Paneer</h3>
-                        <span class="accent-gold font-black italic">₹119</span>
-                    </div>
-                    <p class="text-gray-500 text-xs mb-6 leading-relaxed">Spicy paneer slab with peri-peri kick.</p>
-                    <button class="w-full bg-white text-black py-3 rounded-xl font-black text-xs uppercase hover:bg-[#d4af37] transition">Add to Order</button>
-                </div>
-            </div>
-
-            <div class="food-card rounded-[2rem] overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=600" class="w-full h-56 object-cover" alt="BBQ Burger">
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-black text-lg uppercase">BBQ Grill</h3>
-                        <span class="accent-gold font-black italic">₹139</span>
-                    </div>
-                    <p class="text-gray-500 text-xs mb-6 leading-relaxed">Grilled patty topped with smoky BBQ sauce.</p>
-                    <button class="w-full bg-white text-black py-3 rounded-xl font-black text-xs uppercase hover:bg-[#d4af37] transition">Add to Order</button>
-                </div>
-            </div>
-
-            <div class="food-card rounded-[2rem] overflow-hidden border-green-500/30">
-                <img src="https://images.unsplash.com/photo-1520072959219-c595dc870360?w=600" class="w-full h-56 object-cover" alt="Cheese Blast">
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-black text-lg uppercase">Veg Cheese Blast</h3>
-                        <span class="accent-gold font-black italic">₹149</span>
-                    </div>
-                    <p class="text-gray-500 text-xs mb-6 leading-relaxed">Molten cheese filling inside a crunchy veg patty.</p>
-                    <button class="w-full bg-white text-black py-3 rounded-xl font-black text-xs uppercase hover:bg-[#d4af37] transition">Add to Order</button>
-                </div>
-            </div>
-
-            <div class="food-card rounded-[2rem] overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1551615593-ef5fe247e8f7?w=600" class="w-full h-56 object-cover" alt="Fiery">
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-black text-lg uppercase">Fiery Crunch</h3>
-                        <span class="accent-gold font-black italic">₹179</span>
-                    </div>
-                    <p class="text-gray-500 text-xs mb-6 leading-relaxed">Our hottest chicken burger for spice lovers.</p>
-                    <button class="w-full bg-white text-black py-3 rounded-xl font-black text-xs uppercase hover:bg-[#d4af37] transition">Add to Order</button>
-                </div>
-            </div>
-
-            <div class="food-card rounded-[2rem] overflow-hidden border-green-500/30">
-                <img src="https://images.unsplash.com/photo-1512152272829-e3139592d56f?w=600" class="w-full h-56 object-cover" alt="Veg Double">
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-black text-lg uppercase">Veg Crunch Double</h3>
-                        <span class="accent-gold font-black italic">₹129</span>
-                    </div>
-                    <p class="text-gray-500 text-xs mb-6 leading-relaxed">Two layers of veg crunch and fresh salad.</p>
-                    <button class="w-full bg-white text-black py-3 rounded-xl font-black text-xs uppercase hover:bg-[#d4af37] transition">Add to Order</button>
-                </div>
-            </div>
-
-            <div class="food-card rounded-[2rem] overflow-hidden border-green-500/30">
-                <img src="https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=600" class="w-full h-56 object-cover" alt="Paneer Cheese">
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-black text-lg uppercase">Paneer Cheese</h3>
-                        <span class="accent-gold font-black italic">₹129</span>
-                    </div>
-                    <p class="text-gray-500 text-xs mb-6 leading-relaxed">Soft paneer patty with an extra cheese slice.</p>
-                    <button class="w-full bg-white text-black py-3 rounded-xl font-black text-xs uppercase hover:bg-[#d4af37] transition">Add to Order</button>
-                </div>
-            </div>
-
-            <div class="food-card rounded-[2rem] overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600" class="w-full h-56 object-cover" alt="Chicken Tikka">
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-black text-lg uppercase">Chicken Tikka</h3>
-                        <span class="accent-gold font-black italic">₹109</span>
-                    </div>
-                    <p class="text-gray-500 text-xs mb-6 leading-relaxed">Tandoori-spiced chicken in a toasted bun.</p>
-                    <button class="w-full bg-white text-black py-3 rounded-xl font-black text-xs uppercase hover:bg-[#d4af37] transition">Add to Order</button>
-                </div>
-            </div>
-
-            <div class="food-card rounded-[2rem] overflow-hidden border-green-500/30">
-                <img src="https://images.unsplash.com/photo-1520072959219-c595dc870360?w=600" class="w-full h-56 object-cover" alt="Veg Tandoori">
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-black text-lg uppercase">Veg Tandoori</h3>
-                        <span class="accent-gold font-black italic">₹109</span>
-                    </div>
-                    <p class="text-gray-500 text-xs mb-6 leading-relaxed">Classic veg patty with smoky tandoori mayo.</p>
-                    <button class="w-full bg-white text-black py-3 rounded-xl font-black text-xs uppercase hover:bg-[#d4af37] transition">Add to Order</button>
-                </div>
-            </div>
-
+    <main class="max-w-7xl mx-auto px-6 py-12">
+        <!-- BURGERS -->
+        <div id="burgers" class="menu-grid active grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <script>
+                const b_data = [
+                    ['Joy Chicken', 79],['Classic Chicken', 99],['Double Chicken Patty', 109],['Chicken Tikka', 109],['TCH Zinger', 109],['Tandoori Zinger', 119],['Peri Peri Zinger', 119],['Chicken Popcorn Burger', 129],['BBQ Grill Chicken', 139],['Sp. Firey Crunch', 179],
+                    ['Classic Veg.', 49],['Veggie Crunch', 99],['Veg Tandoori', 109],['Periperi Paneer', 119],['Paneer Cheese', 129],['Veg. Crunch Cheese Blast', 149],['Veggie Crunch Double', 129]
+                ];
+                b_data.forEach(i => document.write(`<div class="food-card p-6 rounded-3xl text-center"><h3 class="font-black text-xs uppercase mb-1">${i[0]}</h3><span class="accent-gold font-black italic">₹${i[1]}</span><button onclick="addToCart('${i[0]}', ${i[1]})" class="w-full mt-4 bg-white text-black py-2 rounded-lg font-black text-[10px] uppercase hover:bg-gold">Add</button></div>`));
+            </script>
         </div>
 
-                 <div id="pizzas" class="menu-grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            
-            <div class="food-card rounded-[2rem] overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600" class="w-full h-56 object-cover" alt="Chicken Pizza">
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-black text-lg uppercase text-white">Margherita Chicken</h3>
-                        <span class="accent-gold font-black italic">₹199</span>
-                    </div>
-                    <p class="text-gray-500 text-xs mb-6 leading-relaxed">Savory chicken chunks with classic mozzarella cheese.</p>
-                    <button class="w-full bg-white text-black py-3 rounded-xl font-black text-xs uppercase hover:bg-[#d4af37] transition">Add to Order</button>
-                </div>
-            </div>
-
-            <div class="food-card rounded-[2rem] overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600" class="w-full h-56 object-cover" alt="Tikka Pizza">
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-black text-lg uppercase text-white">Indi Chicken Tikka</h3>
-                        <span class="accent-gold font-black italic">₹219</span>
-                    </div>
-                    <p class="text-gray-500 text-xs mb-6 leading-relaxed">Spiced chicken tikka topped with onions and capsicum.</p>
-                    <button class="w-full bg-white text-black py-3 rounded-xl font-black text-xs uppercase hover:bg-[#d4af37] transition">Add to Order</button>
-                </div>
-            </div>
-
-            <div class="food-card rounded-[2rem] overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?w=600" class="w-full h-56 object-cover" alt="Tandoori Pizza">
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-black text-lg uppercase text-white">Tandoori Chicken</h3>
-                        <span class="accent-gold font-black italic">₹249</span>
-                    </div>
-                    <p class="text-gray-500 text-xs mb-6 leading-relaxed">Smoky tandoori chicken for that authentic Indian kick.</p>
-                    <button class="w-full bg-white text-black py-3 rounded-xl font-black text-xs uppercase hover:bg-[#d4af37] transition">Add to Order</button>
-                </div>
-            </div>
-
-            <div class="food-card rounded-[2rem] overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1628840042765-356cda07504e?w=600" class="w-full h-56 object-cover" alt="Popcorn Pizza">
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-black text-lg uppercase text-white">Chicken Popcorn</h3>
-                        <span class="accent-gold font-black italic">₹249</span>
-                    </div>
-                    <p class="text-gray-500 text-xs mb-6 leading-relaxed">Loaded with crunchy popcorn chicken and mozzarella.</p>
-                    <button class="w-full bg-white text-black py-3 rounded-xl font-black text-xs uppercase hover:bg-[#d4af37] transition">Add to Order</button>
-                </div>
-            </div>
-
-            <div class="food-card rounded-[2rem] overflow-hidden border-green-500/20 border">
-                <img src="https://images.unsplash.com/photo-1604068549290-dea0e4a305ca?w=600" class="w-full h-56 object-cover" alt="Veg Pizza">
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-black text-lg uppercase text-white">Margherita Pizza</h3>
-                        <span class="accent-gold font-black italic">₹149</span>
-                    </div>
-                    <p class="text-gray-500 text-xs mb-6 leading-relaxed">The original pure cheese pizza experience.</p>
-                    <button class="w-full bg-white text-black py-3 rounded-xl font-black text-xs uppercase hover:bg-[#d4af37] transition">Add to Order</button>
-                </div>
-            </div>
-
-            <div class="food-card rounded-[2rem] overflow-hidden border-green-500/20 border">
-                <img src="https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?w=600" class="w-full h-56 object-cover" alt="Corn Pizza">
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-black text-lg uppercase text-white">Golden Corn</h3>
-                        <span class="accent-gold font-black italic">₹159</span>
-                    </div>
-                    <p class="text-gray-500 text-xs mb-6 leading-relaxed">Sweet golden corn kernels with melted cheese.</p>
-                    <button class="w-full bg-white text-black py-3 rounded-xl font-black text-xs uppercase hover:bg-[#d4af37] transition">Add to Order</button>
-                </div>
-            </div>
-
-            <div class="food-card rounded-[2rem] overflow-hidden border-green-500/20 border">
-                <img src="https://images.unsplash.com/photo-1541745537411-b8046dc6d66c?w=600" class="w-full h-56 object-cover" alt="Paneer Pizza">
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-black text-lg uppercase text-white">Paneer Tikka</h3>
-                        <span class="accent-gold font-black italic">₹199</span>
-                    </div>
-                    <p class="text-gray-500 text-xs mb-6 leading-relaxed">Tender marinated paneer cubes and red paprika.</p>
-                    <button class="w-full bg-white text-black py-3 rounded-xl font-black text-xs uppercase hover:bg-[#d4af37] transition">Add to Order</button>
-                </div>
-            </div>
-
-            <div class="food-card rounded-[2rem] overflow-hidden border-green-500/20 border">
-                <img src="https://images.unsplash.com/photo-1511393230759-3830027f1d45?w=600" class="w-full h-56 object-cover" alt="Tandoori Paneer">
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-black text-lg uppercase text-white">Tandoori Paneer</h3>
-                        <span class="accent-gold font-black italic">₹249</span>
-                    </div>
-                    <p class="text-gray-500 text-xs mb-6 leading-relaxed">Smoky tandoori paneer for a bold vegetarian treat.</p>
-                    <button class="w-full bg-white text-black py-3 rounded-xl font-black text-xs uppercase hover:bg-[#d4af37] transition">Add to Order</button>
-                </div>
-            </div>
-
+        <!-- SANDWICHES -->
+        <div id="sandwiches" class="menu-grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <script>
+                const s_data = [
+                    ['Chicken Tikka Sandwich', 99],['Peri Peri Chicken Sandwich', 109],['Double Chicken Sandwich', 129],['Crispy Chicken Sandwich', 129],['Grill Chicken Sandwich', 139],['Cheese & Corn Chicken', 179],['TCH Sp. Chicken Pizza Sandwich', 199],
+                    ['Veg Grill Sandwich', 99],['Veg Cheese Grill', 129],['Veg Tandoori Panner', 149],['TCH SP. Pizza Sandwich', 199],['Cheesy Golden Corn Sandwich', 149]
+                ];
+                s_data.forEach(i => document.write(`<div class="food-card p-6 rounded-3xl text-center"><h3 class="font-black text-xs uppercase mb-1">${i[0]}</h3><span class="accent-gold font-black italic">₹${i[1]}</span><button onclick="addToCart('${i[0]}', ${i[1]})" class="w-full mt-4 bg-white text-black py-2 rounded-lg font-black text-[10px] uppercase hover:bg-gold">Add</button></div>`));
+            </script>
         </div>
 
-                        <div id="chicken" class="menu-grid active grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            
-            <div class="food-card rounded-[2rem] overflow-hidden border-gold/30 border-2">
-                <img src="https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=600" class="w-full h-56 object-cover" alt="Bunless Burger">
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-black text-lg uppercase text-white">Zinger Rotator</h3>
-                        <span class="accent-gold font-black italic">₹249</span>
-                    </div>
-                    <p class="text-gray-500 text-xs mb-4">The ultimate bunless burger: two crispy chicken fillets as the "bun."</p>
-                    <button class="w-full bg-white text-black py-3 rounded-xl font-black text-xs uppercase hover:bg-[#d4af37] transition">Add to Order</button>
-                </div>
-            </div>
-
-            <div class="food-card rounded-[2rem] overflow-hidden border-gold/30 border-2">
-                <img src="https://images.unsplash.com/photo-1521305916504-4a1121188589?w=600" class="w-full h-56 object-cover" alt="Cheesy Bunless">
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-black text-lg uppercase text-white">Zinger Cheesy Rotator</h3>
-                        <span class="accent-gold font-black italic">₹269</span>
-                    </div>
-                    <p class="text-gray-500 text-xs mb-4">Double down with a massive layer of melting cheese.</p>
-                    <button class="w-full bg-white text-black py-3 rounded-xl font-black text-xs uppercase hover:bg-[#d4af37] transition">Add to Order</button>
-                </div>
-            </div>
-
-            <div class="food-card rounded-[2rem] overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=600" class="w-full h-56 object-cover" alt="Fried Thigh">
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-black text-lg uppercase text-white">Masala Thigh</h3>
-                        <span class="accent-gold font-black italic">₹149</span>
-                    </div>
-                    <p class="text-gray-500 text-xs mb-4">Special open chicken thigh piece with spicy masala coating.</p>
-                    <button class="w-full bg-white text-black py-3 rounded-xl font-black text-xs uppercase hover:bg-[#d4af37] transition">Add to Order</button>
-                </div>
-            </div>
-
-            <div class="food-card rounded-[2rem] overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1623653387945-2fd25214f8fc?w=600" class="w-full h-56 object-cover" alt="Cheese Thigh">
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-black text-lg uppercase text-white">Loaded Cheese Thigh</h3>
-                        <span class="accent-gold font-black italic">₹199</span>
-                    </div>
-                    <p class="text-gray-500 text-xs mb-4">Open chicken thigh loaded with melting cheese sauce.</p>
-                    <button class="w-full bg-white text-black py-3 rounded-xl font-black text-xs uppercase hover:bg-[#d4af37] transition">Add to Order</button>
-                </div>
-            </div>
-
-            <div class="food-card rounded-[2rem] overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1562967914-608f82629710?w=600" class="w-full h-56 object-cover" alt="Popcorn">
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-black text-lg uppercase text-white">Chicken Popcorn</h3>
-                        <div class="text-right">
-                            <span class="accent-gold font-black italic block text-sm">S: ₹149</span>
-                            <span class="accent-gold font-black italic block text-sm">L: ₹279</span>
-                        </div>
-                    </div>
-                    <p class="text-gray-500 text-xs mb-4">Crunchy bite-sized chicken joy.</p>
-                    <button class="w-full bg-white text-black py-3 rounded-xl font-black text-xs uppercase hover:bg-[#d4af37] transition">Add to Order</button>
-                </div>
-            </div>
-
-            <div class="food-card rounded-[2rem] overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1569058242253-92a9c71f9867?w=600" class="w-full h-56 object-cover" alt="Strips">
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-black text-lg uppercase text-white">Chicken Strips</h3>
-                        <div class="text-right">
-                            <span class="accent-gold font-black italic block text-sm">5pc: ₹199</span>
-                            <span class="accent-gold font-black italic block text-sm">10pc: ₹399</span>
-                        </div>
-                    </div>
-                    <p class="text-gray-500 text-xs mb-4">Golden fried premium chicken breast strips.</p>
-                    <button class="w-full bg-white text-black py-3 rounded-xl font-black text-xs uppercase hover:bg-[#d4af37] transition">Add to Order</button>
-                </div>
-            </div>
-
+        <!-- PIZZAS -->
+        <div id="pizzas" class="menu-grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <script>
+                const p_data = [
+                    ['Chicken Margherita', 199],['Cheese Chicken Corn', 229],['Indi Chicken Tikka', 219],['Tandoori Chicken Pizza', 249],['Chicken Popcorn Pizza', 249],['Chicken Seekh Pizza', 249],
+                    ['Margherita Veg', 149],['Double Cheese Margherita', 199],['Veg Golden Corn', 159],['Paneer Tikka Pizza', 199],['Tandoori Paneer Pizza', 249]
+                ];
+                p_data.forEach(i => document.write(`<div class="food-card p-6 rounded-3xl text-center"><h3 class="font-black text-xs uppercase mb-1">${i[0]}</h3><span class="accent-gold font-black italic">₹${i[1]}</span><button onclick="addToCart('${i[0]}', ${i[1]})" class="w-full mt-4 bg-white text-black py-2 rounded-lg font-black text-[10px] uppercase hover:bg-gold">Add</button></div>`));
+            </script>
         </div>
 
-        <div id="sides" class="menu-grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-    
-    <div class="food-card rounded-[2rem] overflow-hidden">
-        <img src="https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=600" class="w-full h-56 object-cover" alt="Orange Pulp">
-        <div class="p-6">
-            <div class="flex justify-between items-start mb-2">
-                <h3 class="font-black text-lg uppercase text-white">Orange Pulp Soda</h3>
-                <span class="accent-gold font-black italic text-xl">69/-</span>
-            </div>
-            <button onclick="directCall()" class="w-full bg-white text-black py-3 rounded-xl font-black text-xs uppercase hover:bg-[#d4af37] transition">Call to Order</button>
+        <!-- FRIED CHICKEN -->
+        <div id="chicken" class="menu-grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <script>
+                const ch_data = [
+                    ['Popcorn (S)', 149],['Popcorn (L)', 279],['Cheesy Popcorn (S)', 179],['Cheesy Popcorn (L)', 319],['Strips (5pc)', 199],['Strips (12pc)', 399],['Sweet Chilli Strips (5pc)', 219],['Nuggets (6pc)', 119],['Nuggets (12pc)', 219],['Spiced Wings (6pc)', 199],['Chicken Seekh (4pc)', 159],['Masala Chicken Thigh', 149],['Loaded Cheese Thigh', 199]
+                ];
+                ch_data.forEach(i => document.write(`<div class="food-card p-6 rounded-3xl text-center"><h3 class="font-black text-xs uppercase mb-1">${i[0]}</h3><span class="accent-gold font-black italic">₹${i[1]}</span><button onclick="addToCart('${i[0]}', ${i[1]})" class="w-full mt-4 bg-white text-black py-2 rounded-lg font-black text-[10px] uppercase hover:bg-gold">Add</button></div>`));
+            </script>
         </div>
-    </div>
 
-    <div class="food-card rounded-[2rem] overflow-hidden">
-        <img src="https://images.unsplash.com/photo-1595981267035-7b04ca84a82d?w=600" class="w-full h-56 object-cover" alt="Strawberry Pulp">
-        <div class="p-6">
-            <div class="flex justify-between items-start mb-2">
-                <h3 class="font-black text-lg uppercase text-white">Strawberry Pulp Soda</h3>
-                <span class="accent-gold font-black italic text-xl">69/-</span>
-            </div>
-            <button onclick="directCall()" class="w-full bg-white text-black py-3 rounded-xl font-black text-xs uppercase hover:bg-[#d4af37] transition">Call to Order</button>
+        <!-- SIDES & DRINKS -->
+        <div id="sides" class="menu-grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <script>
+                const side_data = [
+                    ['Salted Fries', 79],['Peri Peri Fries', 89],['Chicken Fries (10pc)', 99],['Cheeeeeesy Fries', 129],['Masala Cheeesy', 139],['Cheeesy Chicken Fries (S)', 249],['Cheeesy Chicken Fries (L)', 499],
+                    ['Lava Cake', 99],['Orange Soda', 69],['Blueberry Soda', 69],['Strawberry Soda', 69],['Green Apple Soda', 69],['Coke/Campa (250ml)', 20]
+                ];
+                side_data.forEach(i => document.write(`<div class="food-card p-6 rounded-3xl text-center"><h3 class="font-black text-xs uppercase mb-1">${i[0]}</h3><span class="accent-gold font-black italic">₹${i[1]}</span><button onclick="addToCart('${i[0]}', ${i[1]})" class="w-full mt-4 bg-white text-black py-2 rounded-lg font-black text-[10px] uppercase hover:bg-gold">Add</button></div>`));
+            </script>
         </div>
-    </div>
-
-    <div class="food-card rounded-[2rem] overflow-hidden">
-        <img src="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=600" class="w-full h-56 object-cover" alt="Blueberry Pulp">
-        <div class="p-6">
-            <div class="flex justify-between items-start mb-2">
-                <h3 class="font-black text-lg uppercase text-white">Blueberry Pulp Soda</h3>
-                <span class="accent-gold font-black italic text-xl">69/-</span>
-            </div>
-            <button onclick="directCall()" class="w-full bg-white text-black py-3 rounded-xl font-black text-xs uppercase hover:bg-[#d4af37] transition">Call to Order</button>
-        </div>
-    </div>
-
-    <div class="food-card rounded-[2rem] overflow-hidden">
-        <img src="https://images.unsplash.com/photo-1546173159-315724a31696?w=600" class="w-full h-56 object-cover" alt="Green Apple Pulp">
-        <div class="p-6">
-            <div class="flex justify-between items-start mb-2">
-                <h3 class="font-black text-lg uppercase text-white">Green Apple Pulp Soda</h3>
-                <span class="accent-gold font-black italic text-xl">69/-</span>
-            </div>
-            <button onclick="directCall()" class="w-full bg-white text-black py-3 rounded-xl font-black text-xs uppercase hover:bg-[#d4af37] transition">Call to Order</button>
-        </div>
-    </div>
-
-    <div class="food-card rounded-[2rem] overflow-hidden">
-        <img src="https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=600" class="w-full h-56 object-cover" alt="Campa Soda">
-        <div class="p-6">
-            <div class="flex justify-between items-start mb-2">
-                <h3 class="font-black text-lg uppercase text-white">Campa</h3>
-                <span class="accent-gold font-black italic text-xl">MRP</span>
-            </div>
-            <button onclick="directCall()" class="w-full bg-white text-black py-3 rounded-xl font-black text-xs uppercase hover:bg-[#d4af37] transition">Call to Order</button>
-        </div>
-    </div>
-
-    <div class="food-card rounded-[2rem] overflow-hidden">
-        <img src="https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=600" class="w-full h-56 object-cover" alt="Water Bottle">
-        <div class="p-6">
-            <div class="flex justify-between items-start mb-2">
-                <h3 class="font-black text-lg uppercase text-white">Water Bottle</h3>
-                <span class="accent-gold font-black italic text-xl">MRP</span>
-            </div>
-            <button onclick="directCall()" class="w-full bg-white text-black py-3 rounded-xl font-black text-xs uppercase hover:bg-[#d4af37] transition">Call to Order</button>
-        </div>
-    </div>
-
-    <div class="food-card rounded-[2rem] overflow-hidden border-[#d4af37]/30 border-2">
-        <img src="choco-lava.png" class="w-full h-56 object-cover" alt="Choco Lava">
-        <div class="p-6">
-            <div class="flex justify-between items-start mb-2">
-                <h3 class="font-black text-lg uppercase text-white">Choco Lava</h3>
-                <div class="text-right">
-                    <span class="accent-gold font-black italic block text-xl">99/-</span>
-                    <span class="text-gray-400 text-[10px] uppercase font-bold">2 For 149/-</span>
-                </div>
-            </div>
-            <button onclick="directCall()" class="w-full bg-white text-black py-3 rounded-xl font-black text-xs uppercase hover:bg-[#d4af37] transition">Call to Order</button>
-        </div>
-    </div>
-
-</div>
-
-    
-
     </main>
 
-    <footer id="find-us" class="bg-black py-20 px-6 border-t border-white/5 text-center">
-        <div class="max-w-4xl mx-auto flex flex-col items-center">
-            <img src="logo.png" alt="TCH Logo" class="h-24 w-auto mb-6">
-            
-            <h3 class="text-4xl font-black italic accent-gold uppercase mb-6">Visit The Hub</h3>
-            <a href="https://www.google.com/maps/search/?api=1&query=Shop+no.+38,+Sadguru+Tirthdham,+Raiya+Road,+Rajkot" target="_blank">
-                <p class="text-xl text-gray-300 mb-12 hover:text-white transition">Shop no. 38, Sadguru Tirthdham, Raiya Road, Rajkot</p>
-            </a>
-            
-            <div class="flex flex-col md:flex-row justify-center items-center gap-6 w-full">
-                <a href="https://wa.me/919054545323" class="bg-[#25D366] text-white font-black px-12 py-5 w-full md:w-auto rounded-2xl flex items-center justify-center gap-3 hover:scale-105 transition">
-                    Order via WhatsApp
-                </a>
-                <a href="https://www.google.com/maps/search/?api=1&query=Shop+no.+38,+Sadguru+Tirthdham,+Raiya+Road,+Rajkot" target="_blank" class="border border-white/20 text-white font-black px-12 py-5 w-full md:w-auto rounded-2xl hover:bg-white hover:text-black transition">
-                    Get Directions
-                </a>
-            </div>
-            
-            <p class="mt-20 text-[10px] text-gray-700 tracking-[1.5em] font-black uppercase italic">"Crunch in every bite"</p>
-        </div>
-    </footer>
+    <div id="cart-ui" onclick="toggleCart()">
+        <span>ORDER</span> <span id="cart-count">0</span>
+    </div>
 
     <script>
+        let cart = [];
+        function toggleCart() {
+            const dr = document.getElementById('cart-drawer');
+            const ov = document.getElementById('cart-overlay');
+            dr.classList.toggle('open');
+            ov.style.display = dr.classList.contains('open') ? 'block' : 'none';
+            renderCart();
+        }
         function showCategory(id, btn) {
-            document.querySelectorAll('.menu-grid').forEach(grid => grid.classList.remove('active'));
+            document.querySelectorAll('.menu-grid').forEach(g => g.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-
-            const yOffset = -150; 
-            const element = document.getElementById('menu');
-            const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
-            window.scrollTo({top: y, behavior: 'smooth'});
+            window.scrollTo({ top: document.getElementById('menu-tabs').offsetTop - 20, behavior: 'smooth' });
         }
+        function addToCart(name, price) {
+            cart.push({ id: Date.now() + Math.random(), name, price });
+            updateUI();
+        }
+        function removeItem(id) {
+            cart = cart.filter(item => item.id !== id);
+            updateUI();
+            renderCart();
+        }
+        function updateUI() {
+            document.getElementById('cart-ui').style.display = cart.length > 0 ? 'flex' : 'none';
+            document.getElementById('cart-count').innerText = cart.length;
+        }
+        function renderCart() {
+            const list = document.getElementById('cart-items-list');
+            const totalEl = document.getElementById('cart-total');
+            list.innerHTML = ''; let total = 0;
+            cart.forEach(item => {
+                total += item.price;
+                list.innerHTML += `
+                    <div class="flex justify-between items-center bg-white/5 p-4 rounded-xl border border-white/10">
+                        <p class="text-xs uppercase font-bold">${item.name}</p>
+                        <div class="flex items-center gap-4">
+                            <p class="accent-gold text-xs italic">₹${item.price}</p>
+                            <button onclick="removeItem(${item.id})" class="text-red-500 text-[10px] font-black uppercase hover:text-white">✕</button>
+                        </div>
+                    </div>`;
+            });
+            totalEl.innerText = `₹${total}`;
+        }
+        function sendOrder() {
+            let msg = cart.map(i => `${i.name} - ₹${i.price}`).join('\n');
+            let total = cart.reduce((s, i) => s + i.price, 0);
+            window.open(`https://wa.me/919054545323?text=${encodeURIComponent("New Order From Web:\n\n" + msg + "\n\nTotal: ₹" + total)}`);
+        }
+        function clearCart() { cart = []; toggleCart(); updateUI(); }
     </script>
 </body>
 </html>
+
+If it was you what are the things you have added into this
